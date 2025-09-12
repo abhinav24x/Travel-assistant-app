@@ -9,13 +9,21 @@ def main():
     try:
         # Get configuration settings
         load_dotenv()
-        open_ai_endpoint = os.getenv("OPEN_AI_ENDPOINT")
-        open_ai_key = os.getenv("OPEN_AI_KEY")
+        open_ai_endpoint = os.getenv("OPENAI_ENDPOINT")
+        open_ai_key = os.getenv("OPENAI_API_KEY")
         chat_model = os.getenv("CHAT_MODEL")
         embedding_model = os.getenv("EMBEDDING_MODEL")
         search_url = os.getenv("SEARCH_ENDPOINT")
         search_key = os.getenv("SEARCH_KEY")
         index_name = os.getenv("INDEX_NAME")
+        
+        # Debug: Print configuration (without exposing full keys)
+        print(f"Search URL: {search_url}")
+        print(f"Search Key: {search_key[:10]}...{search_key[-4:] if search_key else 'None'}")
+        print(f"Index Name: {index_name}")
+        print(f"OpenAI Endpoint: {open_ai_endpoint}")
+        print(f"OpenAI Key: {open_ai_key[:10]}...{open_ai_key[-4:] if open_ai_key else 'None'}")
+        print("---")
 
 
         # Get an Azure OpenAI chat client
@@ -81,7 +89,12 @@ def main():
             prompt.append({"role": "assistant", "content": completion})
 
     except Exception as ex:
-        print(ex)
+        print(f"Error: {ex}")
+        print("\nTroubleshooting steps:")
+        print("1. Verify Azure Search admin key in Azure Portal")
+        print("2. Check if 'brochures-index' exists in your search service")
+        print("3. Ensure search endpoint URL is correct")
+        print("4. Verify network access to search service")
 
 if __name__ == '__main__':
     main()
